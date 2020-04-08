@@ -12,12 +12,14 @@ namespace Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -25,9 +27,16 @@ namespace Web
             services.AddControllers();
             services.AddAzureClients((azureClientFactoryBuilder) =>
             {
-                azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
+                if (Environment.IsDevelopment())
+                {
+                    azureClientFactoryBuilder.UseCredential(new InteractiveBrowserCredential());
+                }
+                else
+                {
+                    azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
+                }
                 azureClientFactoryBuilder.AddSecretClient(new Uri("https://adfiksencovid19.vault.azure.net/"));
-                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/covid19model"));
+                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/"));
             });
             services.AddTransient<IModelDataProvider, ModelDataProvider>();
         }
