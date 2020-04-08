@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covidweb-deployment
+  labels:
+    app: covidweb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: covidweb
+  template:
+    metadata:
+      labels:
+        app: covidweb
+    spec:
+      containers:
+      - name: covidweb
+        image: adfiksencovid19.azurecr.io/covid19model:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: covidweb
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 80
+    selector:
+        app: covidweb
