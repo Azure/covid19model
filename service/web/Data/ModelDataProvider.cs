@@ -8,20 +8,17 @@ namespace Web.Data
 {
     public class ModelDataProvider : IModelDataProvider
     {
-        private readonly BlobServiceClient _blobServiceClient;
+        private readonly BlobContainerClient _blobContainerClient;
 
-        public ModelDataProvider(BlobServiceClient azureClientFactory)
+        public ModelDataProvider(BlobServiceClient blobServiceClient)
         {
-            _blobServiceClient = azureClientFactory;
+            _blobContainerClient = blobServiceClient.GetBlobContainerClient("covid19model");
         }
 
         public async Task<object> GetModelDataAsync()
         {
-            return new
-            {
-                foo="bar"
-            };
-            ////var modelData = await _blobClient.DownloadAsync();
+            return null;
+            ////var modelData = await 
 
             ////var formatter = new BinaryFormatter();
             ////modelData.Value.Content.Seek(0, SeekOrigin.Begin);
