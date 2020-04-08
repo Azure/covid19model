@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Web.Data;
 
 namespace Web
 {
@@ -22,12 +23,13 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAzureClients((azureClientFactoryBuilder) => 
+            services.AddAzureClients((azureClientFactoryBuilder) =>
             {
                 azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
                 azureClientFactoryBuilder.AddSecretClient(new Uri("https://adfiksencovid19.vault.azure.net/"));
                 azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/covid19model"));
             });
+            services.AddTransient<IModelDataProvider, ModelDataProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
