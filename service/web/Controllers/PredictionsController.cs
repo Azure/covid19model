@@ -21,7 +21,6 @@ namespace Web.Controllers
         /// <summary>
         /// Gets the prediction model
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<object>> GetModelAsync()
         {
