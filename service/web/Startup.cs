@@ -1,17 +1,11 @@
-using Azure.Security.KeyVault.Secrets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Azure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Azure.Core.Extensions;
+using System;
 
 namespace Web
 {
@@ -30,6 +24,7 @@ namespace Web
             services.AddControllers();
             services.AddAzureClients((azureClientFactoryBuilder) => 
             {
+                azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
                 azureClientFactoryBuilder.AddSecretClient(new Uri("https://adfiksencovid19.vault.azure.net/"));
                 azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/covid19model"));
             });
