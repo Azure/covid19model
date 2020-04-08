@@ -31,7 +31,7 @@ namespace Web
             services.AddAzureClients((azureClientFactoryBuilder) => 
             {
                 azureClientFactoryBuilder.AddSecretClient(new Uri("https://adfiksencovid19.vault.azure.net/"));
-                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("adfiksencovid19.blob.core.windows.net"));
+                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/covid19model"));
             });
         }
 
