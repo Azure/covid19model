@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.1" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.5" />
+  </ItemGroup>
+
 
 </Project>
