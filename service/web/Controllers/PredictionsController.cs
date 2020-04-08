@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using System.IO;
 using System.Threading.Tasks;
 using Web.Data;
 
@@ -22,9 +24,13 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<object>> GetModelAsync()
+        public async Task<ActionResult<Stream>> GetModelAsync()
         {
-            return await _modelDataProvider.GetModelDataAsync();
+            var fileStream =  await _modelDataProvider.GetModelDataAsync();
+            return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = "test.jpg"
+            };
         }
     }
 }
