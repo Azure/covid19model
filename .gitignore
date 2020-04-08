@@ -180,3 +180,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode
+
+#.NET Core binaries
+bin/
+obj/
