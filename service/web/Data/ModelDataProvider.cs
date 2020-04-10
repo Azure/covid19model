@@ -17,7 +17,8 @@ namespace Web.Data
 
         public async Task<Stream> GetPredictionDataAsync(string country)
         {
-            var blobClient = _blobContainerClient.GetBlobClient($"base-plot-{country}.csv");
+            var blobName = GetBlobName("plot", country);
+            var blobClient = _blobContainerClient.GetBlobClient(blobName);
             var blobResponse = await blobClient.DownloadAsync();
             var requestStatus = blobResponse.GetRawResponse().Status;
             if (requestStatus == (int)HttpStatusCode.NotFound)
@@ -35,7 +36,8 @@ namespace Web.Data
 
         public async Task<Stream> GetInterventionDataAsync(string country)
         {
-            var blobClient = _blobContainerClient.GetBlobClient($"base-intervention-{country}.csv");
+            var blobName = GetBlobName("intervention", country);
+            var blobClient = _blobContainerClient.GetBlobClient(blobName);
             var blobResponse = await blobClient.DownloadAsync();
             var requestStatus = blobResponse.GetRawResponse().Status;
             if (requestStatus == (int)HttpStatusCode.NotFound)
@@ -49,6 +51,26 @@ namespace Web.Data
             }
 
             return blobResponse.Value.Content;
+        }
+
+        /// <summary>
+        /// Given a data type to lookup, and a country to look it up for, returns the name of the blob representing
+        /// that data.
+        /// </summary>
+        private string GetBlobName(string dataType, string country)
+        {
+            string countrySuffix;
+            if (country == null)
+            {
+                countrySuffix = string.Empty;
+            }
+            else
+            {
+                countrySuffix = $"-{country}";
+            }
+
+
+            return $"base-{dataType}{countrySuffix}.csv";
         }
     }
 }
