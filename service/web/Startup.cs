@@ -29,14 +29,16 @@ namespace Web
             {
                 if (Environment.IsDevelopment())
                 {
+                    // use login locally
                     azureClientFactoryBuilder.UseCredential(new InteractiveBrowserCredential());
                 }
                 else
                 {
+                    // use MSI on website
                     azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
                 }
-                azureClientFactoryBuilder.AddSecretClient(new Uri("https://adfiksencovid19.vault.azure.net/"));
-                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://adfiksencovid19.blob.core.windows.net/"));
+                azureClientFactoryBuilder.AddSecretClient(new Uri("https://msfticlcovid19.vault.azure.net/"));
+                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://msfticlblockblob.blob.core.windows.net/"));
             });
             services.AddTransient<IModelDataProvider, ModelDataProvider>();
         }
