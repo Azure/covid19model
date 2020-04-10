@@ -29,7 +29,7 @@ namespace Web.Controllers
             var fileStream =  await _modelDataProvider.GetModelDataAsync();
             return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
             {
-                FileDownloadName = "test.jpg"
+                FileDownloadName = "predictions.csv"
             };
         }
     }
