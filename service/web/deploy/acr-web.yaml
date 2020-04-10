@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: covidweb
-        image: adfiksencovid19.azurecr.io/covid19model:latest
+        image: msfticlcovid19.azurecr.io/web:latest
         ports:
         - containerPort: 5000
 ---
