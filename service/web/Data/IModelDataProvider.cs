@@ -14,7 +14,15 @@ namespace Web.Data
         /// <summary>
         /// Gets the inference data from the model
         /// </summary>
+        /// <param name="country">The country to get predictive data for</param>
         /// <returns></returns>
-        Task<Stream> GetModelDataAsync();
+        Task<Stream> GetPredictionDataAsync(string country);
+
+        /// <summary>
+        /// Gets the intervention inference data from the model
+        /// </summary>
+        /// <param name="country">The country to get predictive data for</param>
+        /// <returns></returns>
+        Task<Stream> GetInterventionDataAsync(string country);
     }
 }
