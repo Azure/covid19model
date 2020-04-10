@@ -26,7 +26,7 @@ namespace Web.Controllers
         [HttpGet("plot/{country}")]
         public async Task<ActionResult<Stream>> GetModelAsync(string country)
         {
-            var fileStream =  await _modelDataProvider.GetPredictionDataAsync(country);
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country);
             if (fileStream == null)
             {
                 return NotFound();
@@ -35,6 +35,24 @@ namespace Web.Controllers
             return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
             {
                 FileDownloadName = $"base-plot-{country}.csv"
+            };
+        }
+
+        /// <summary>
+        /// Gets the prediction model
+        /// </summary>
+        [HttpGet("plot")]
+        public async Task<ActionResult<Stream>> GetModelAsync()
+        {
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null);
+            if (fileStream == null)
+            {
+                return NotFound();
+            }
+
+            return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = $"base-plot.csv"
             };
         }
 
@@ -50,6 +68,21 @@ namespace Web.Controllers
             return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
             {
                 FileDownloadName = $"base-intervention-{country}.csv"
+            };
+        }
+
+        [HttpGet("interventions")]
+        public async Task<ActionResult<Stream>> GetInterventionsAsync()
+        {
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null);
+            if (fileStream == null)
+            {
+                return NotFound();
+            }
+
+            return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = $"base-intervention.csv"
             };
         }
     }
