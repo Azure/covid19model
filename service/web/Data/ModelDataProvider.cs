@@ -20,7 +20,7 @@ namespace Web.Data
         public ModelDataProvider(BlobServiceClient blobServiceClient)
         {
             _client = blobServiceClient;
-            _blobContainerClient = blobServiceClient.GetBlobContainerClient("covid19model");
+            _blobContainerClient = blobServiceClient.GetBlobContainerClient("covidmodels");
         }
 
         public async Task<Stream> GetModelDataAsync()
@@ -42,6 +42,6 @@ namespace Web.Data
         }
 
         // TODO: update this daily to the correctly ingested model data
-        private string GetBlobName() => "20191203_120441.jpg";
+        private string GetBlobName() => "predictions.csv";
     }
 }
