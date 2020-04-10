@@ -23,13 +23,33 @@ namespace Web.Controllers
         /// <summary>
         /// Gets the prediction model
         /// </summary>
-        [HttpGet]
-        public async Task<ActionResult<Stream>> GetModelAsync()
+        [HttpGet("plot/{country}")]
+        public async Task<ActionResult<Stream>> GetModelAsync(string country)
         {
-            var fileStream =  await _modelDataProvider.GetModelDataAsync();
+            var fileStream =  await _modelDataProvider.GetPredictionDataAsync(country);
+            if (fileStream == null)
+            {
+                return NotFound();
+            }
+
             return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
             {
-                FileDownloadName = "predictions.csv"
+                FileDownloadName = $"base-plot-{country}.csv"
+            };
+        }
+
+        [HttpGet("interventions/{country}")]
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country)
+        {
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country);
+            if (fileStream == null)
+            {
+                return NotFound();
+            }
+
+            return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = $"base-intervention-{country}.csv"
             };
         }
     }
