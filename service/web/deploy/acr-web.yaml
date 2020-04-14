@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: covidweb-deployment
+  name: msfticlcovid19-deployment
   labels:
-    app: covidweb
+    app: msfticlcovid19
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
-      app: covidweb
+      app: msfticlcovid19
   template:
     metadata:
       labels:
-        app: covidweb
+        app: msfticlcovid19
     spec:
       containers:
-      - name: covidweb
+      - name: msfticlcovid19
         image: msfticlcovid19.azurecr.io/web:latest
         ports:
         - containerPort: 5000
@@ -23,11 +23,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: covidweb
+    name: msfticlcovid19
 spec:
     type: LoadBalancer
     ports:
     - port: 80
       targetPort: 5000
     selector:
-        app: covidweb
+        app: msfticlcovid19
