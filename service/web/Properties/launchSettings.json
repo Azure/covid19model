@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "predictions/plots",
+      "launchUrl": "predictions/plot",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "predictions/plots",
+      "launchUrl": "predictions/plot",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
