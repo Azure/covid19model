@@ -13,7 +13,7 @@ namespace Web.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize("MsftImperialOnly")]
     public class PredictionsController : ControllerBase
     {
         private readonly IModelDataProvider _modelDataProvider;
@@ -27,9 +27,9 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot/{country}")]
-        public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? datetime)
+        public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? modelDate)
         {
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, datetime ?? DateTime.UtcNow);
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, modelDate ?? DateTime.UtcNow);
             if (fileStream == null)
             {
                 return NotFound();
@@ -45,9 +45,9 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot")]
-        public async Task<ActionResult<Stream>> GetModelAsync(DateTime? datetime)
+        public async Task<ActionResult<Stream>> GetModelAsync(DateTime? modelDate)
         {
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null, datetime ?? DateTime.UtcNow);
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null, modelDate ?? DateTime.UtcNow);
             if (fileStream == null)
             {
                 return NotFound();
@@ -60,9 +60,9 @@ namespace Web.Controllers
         }
 
         [HttpGet("interventions/{country}")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? datetime)
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? modelDate)
         {
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, datetime ?? DateTime.UtcNow);
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, modelDate ?? DateTime.UtcNow);
             if (fileStream == null)
             {
                 return NotFound();
@@ -75,9 +75,9 @@ namespace Web.Controllers
         }
 
         [HttpGet("interventions")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? datetime)
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? modelDate)
         {
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null, datetime ?? DateTime.UtcNow);
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null, modelDate ?? DateTime.UtcNow);
             if (fileStream == null)
             {
                 return NotFound();

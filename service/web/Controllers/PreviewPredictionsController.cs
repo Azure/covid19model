@@ -27,19 +27,19 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot/{country}")]
-        public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? date)
+        public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? modelDate)
         {
-            return await GetModelResponseAsync(country, date);
+            return await GetModelResponseAsync(country, modelDate);
         }
 
         /// <summary>
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot")]
-        public async Task<ActionResult<Stream>> GetModelAsync(DateTime? date)
+        public async Task<ActionResult<Stream>> GetModelAsync(DateTime? modelDate)
         {
-            date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null, date.Value);
+            modelDate = modelDate ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null, modelDate.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -52,21 +52,21 @@ namespace Web.Controllers
         }
 
         [HttpGet("interventions/{country}")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? date)
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? modelDate)
         {
-            return await GetInterventionsResponseAsync(country, date.Value);
+            return await GetInterventionsResponseAsync(country, modelDate.Value);
         }
 
         [HttpGet("interventions")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? date)
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? modelDate)
         {
-            return await GetInterventionsResponseAsync(null, date);
+            return await GetInterventionsResponseAsync(null, modelDate);
         }
 
-        private async Task<ActionResult<Stream>> GetModelResponseAsync(string country, DateTime? date)
+        private async Task<ActionResult<Stream>> GetModelResponseAsync(string country, DateTime? modelDate)
         {
-            date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, date.Value);
+            modelDate = modelDate ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, modelDate.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -78,10 +78,10 @@ namespace Web.Controllers
             };
         }
 
-        private async Task<ActionResult<Stream>> GetInterventionsResponseAsync(string country, DateTime? date)
+        private async Task<ActionResult<Stream>> GetInterventionsResponseAsync(string country, DateTime? modelDate)
         {
-            date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, date.Value);
+            modelDate = modelDate ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, modelDate.Value);
             if (fileStream == null)
             {
                 return NotFound();
