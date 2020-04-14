@@ -29,17 +29,7 @@ namespace Web.Controllers
         [HttpGet("plot/{country}")]
         public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? date)
         {
-            date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, date.Value);
-            if (fileStream == null)
-            {
-                return NotFound();
-            }
-
-            return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
-            {
-                FileDownloadName = $"base-plot-{country}.csv"
-            };
+            return await GetModelResponseAsync(country, date);
         }
 
         /// <summary>
@@ -64,8 +54,19 @@ namespace Web.Controllers
         [HttpGet("interventions/{country}")]
         public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? date)
         {
+            return await GetInterventionsResponseAsync(country, date.Value);
+        }
+
+        [HttpGet("interventions")]
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? date)
+        {
+            return await GetInterventionsResponseAsync(null, date);
+        }
+
+        private async Task<ActionResult<Stream>> GetModelResponseAsync(string country, DateTime? date)
+        {
             date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, date.Value);
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -73,15 +74,14 @@ namespace Web.Controllers
 
             return new FileStreamResult(fileStream, new MediaTypeHeaderValue("text/plain"))
             {
-                FileDownloadName = $"base-intervention-{country}.csv"
+                FileDownloadName = $"base-plot-{country}.csv"
             };
         }
 
-        [HttpGet("interventions")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? date)
+        private async Task<ActionResult<Stream>> GetInterventionsResponseAsync(string country, DateTime? date)
         {
             date = date ?? DateTime.UtcNow;
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null, date.Value);
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
