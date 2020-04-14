@@ -1,11 +1,13 @@
 using Azure.Identity;
 using Azure.Storage;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
 using System;
 using Web.Data;
 
@@ -45,6 +47,10 @@ namespace Web
                 }
             });
             services.AddTransient<IModelDataProvider, ModelDataProvider>();
+
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +59,8 @@ namespace Web
             app.UseDeveloperExceptionPage();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
