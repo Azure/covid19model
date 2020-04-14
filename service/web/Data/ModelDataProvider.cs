@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -15,9 +16,9 @@ namespace Web.Data
             _blobContainerClient = blobServiceClient.GetBlobContainerClient("covidmodels");
         }
 
-        public async Task<Stream> GetPredictionDataAsync(string country)
+        public async Task<Stream> GetPredictionDataAsync(string country, DateTime date)
         {
-            var blobName = GetBlobName("plot", country);
+            var blobName = GetBlobName("plot", country, date);
             var blobClient = _blobContainerClient.GetBlobClient(blobName);
             var blobResponse = await blobClient.DownloadAsync();
             var requestStatus = blobResponse.GetRawResponse().Status;
@@ -34,9 +35,9 @@ namespace Web.Data
             return blobResponse.Value.Content;
         }
 
-        public async Task<Stream> GetInterventionDataAsync(string country)
+        public async Task<Stream> GetInterventionDataAsync(string country, DateTime date)
         {
-            var blobName = GetBlobName("intervention", country);
+            var blobName = GetBlobName("intervention", country, date);
             var blobClient = _blobContainerClient.GetBlobClient(blobName);
             var blobResponse = await blobClient.DownloadAsync();
             var requestStatus = blobResponse.GetRawResponse().Status;
@@ -57,8 +58,9 @@ namespace Web.Data
         /// Given a data type to lookup, and a country to look it up for, returns the name of the blob representing
         /// that data.
         /// </summary>
-        private string GetBlobName(string dataType, string country)
+        private string GetBlobName(string dataType, string country, DateTime date)
         {
+            var dateStr = date.Date.ToString("s").Split("T").First();
             string countrySuffix;
             if (country == null)
             {
@@ -69,8 +71,7 @@ namespace Web.Data
                 countrySuffix = $"-{country}";
             }
 
-
-            return $"base-{dataType}{countrySuffix}.csv";
+            return $"{dateStr}-base-{dataType}{countrySuffix}.csv";
         }
     }
 }

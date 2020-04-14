@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Data;
@@ -26,9 +27,10 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot/{country}")]
-        public async Task<ActionResult<Stream>> GetModelAsync(string country)
+        public async Task<ActionResult<Stream>> GetModelAsync(string country, DateTime? date)
         {
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country);
+            date = date ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(country, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -44,9 +46,10 @@ namespace Web.Controllers
         /// Gets the prediction model
         /// </summary>
         [HttpGet("plot")]
-        public async Task<ActionResult<Stream>> GetModelAsync()
+        public async Task<ActionResult<Stream>> GetModelAsync(DateTime? date)
         {
-            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null);
+            date = date ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetPredictionDataAsync(null, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -59,9 +62,10 @@ namespace Web.Controllers
         }
 
         [HttpGet("interventions/{country}")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country)
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(string country, DateTime? date)
         {
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country);
+            date = date ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(country, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
@@ -74,9 +78,10 @@ namespace Web.Controllers
         }
 
         [HttpGet("interventions")]
-        public async Task<ActionResult<Stream>> GetInterventionsAsync()
+        public async Task<ActionResult<Stream>> GetInterventionsAsync(DateTime? date)
         {
-            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null);
+            date = date ?? DateTime.UtcNow;
+            var fileStream = await _modelDataProvider.GetInterventionDataAsync(null, date.Value);
             if (fileStream == null)
             {
                 return NotFound();
