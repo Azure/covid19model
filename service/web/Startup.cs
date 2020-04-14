@@ -1,6 +1,7 @@
 using Azure.Identity;
 using Azure.Storage;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Azure;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using System;
+using Web.AuthZ;
+using Web.AuthZ.Requirements;
 using Web.Data;
 
 namespace Web
@@ -47,10 +50,18 @@ namespace Web
                 }
             });
             services.AddTransient<IModelDataProvider, ModelDataProvider>();
+            services.AddTransient<IApprovalDataProvider, ApprovalDataProvider>();
+            services.AddScoped<IAuthorizationHandler, ModelApproverAuthorizationHandler>();
+
+            services.AddHttpContextAccessor();
 
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options));
 
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("MsftImperialOnly", policy => policy.AddRequirements(new ModelApproverRequirement()));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
