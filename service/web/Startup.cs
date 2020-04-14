@@ -1,4 +1,5 @@
 using Azure.Identity;
+using Azure.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Azure;
@@ -30,15 +31,18 @@ namespace Web
                 if (Environment.IsDevelopment())
                 {
                     // use login locally
-                    azureClientFactoryBuilder.UseCredential(new InteractiveBrowserCredential());
+                    // See https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows
+                    // in terminal, run dotnet user-secrets set "Storage:Blob:StorageAccessKey" "{storageKeyHere}"
+                    // where storageKeyHere is found in the Access keys tab of our storage account.
+                    // Ensure running with ASPNETCORE_ENVIRONMENT flag set to "Development"
+                    azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://msfticlblockblob.blob.core.windows.net/"), new StorageSharedKeyCredential("msfticlblockblob", Configuration["Storage:Blob:StorageAccessKey"]));
                 }
                 else
                 {
                     // use MSI on website
                     azureClientFactoryBuilder.UseCredential(new ManagedIdentityCredential());
+                    azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://msfticlblockblob.blob.core.windows.net/"));
                 }
-                azureClientFactoryBuilder.AddSecretClient(new Uri("https://msfticlcovid19.vault.azure.net/"));
-                azureClientFactoryBuilder.AddBlobServiceClient(new Uri("https://msfticlblockblob.blob.core.windows.net/"));
             });
             services.AddTransient<IModelDataProvider, ModelDataProvider>();
         }
@@ -46,10 +50,7 @@ namespace Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseDeveloperExceptionPage();
 
             app.UseRouting();
 
