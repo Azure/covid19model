@@ -8,16 +8,16 @@ using Web.Data;
 namespace Web.Controllers
 {
     /// <summary>
-    /// Provides API to return prediction data
+    /// Provides API to return preview prediction data
     /// </summary>
-    [Route("[controller]")]
+    [Route("preview/predictions")]
     [ApiController]
-    [AllowAnonymous]
-    public class PredictionsController : ControllerBase
+    [Authorize]
+    public class PreviewPredictionsController : ControllerBase
     {
         private readonly IModelDataProvider _modelDataProvider;
 
-        public PredictionsController(IModelDataProvider modelDataProvider)
+        public PreviewPredictionsController(IModelDataProvider modelDataProvider)
         {
             _modelDataProvider = modelDataProvider;
         }
